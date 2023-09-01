@@ -1,0 +1,29 @@
+  //with photo
+    @PostMapping("/vehiclePhoto")
+    private ResponseEntity<?> addVehicleWithPhoto(MultipartFile image,String vehicleType,String costPerHour,String costWithDriver,String brand,String vehicleNumber
+    ,String city,String state,String street,String hr) {
+        String filepath= Paths.get("").toAbsolutePath().toString();
+        Path actualFilepath=Paths.get(filepath,"src","main","resources","static","images" , image.getOriginalFilename());
+        try {
+            image.transferTo(actualFilepath);
+            Vehicle vehicle = Vehicle.builder()
+                    .image(image.getOriginalFilename())
+                    .vehicleType(vehicleType)
+                    .costPerHour(costPerHour)
+                    .brand(brand)
+                    .city(city)
+                    .costWithDriver(costWithDriver)
+                    .vehicleNumber(vehicleNumber)
+                    .city(city)
+                    .state(state)
+                    .street(street)
+                    .hr(hr)
+                    .build();
+            System.out.println(vehicle);
+            return new ResponseEntity<>(vehicleServices.addVehicle(vehicle), HttpStatus.OK);
+        }
+        catch(Exception e)
+        {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
